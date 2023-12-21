@@ -1,12 +1,9 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <exam-data lesson-id="5e8ca6a9c01ad7190cdab57f" class-id="5e652e05fd6d8e01304cd67c"></exam-data>
+  <!-- <router-view/> -->
 </template>
 
-<style lang="less">
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -28,3 +25,6 @@ nav {
   }
 }
 </style>
+<script lang="ts" setup>
+import ExamData from './components/ExamData.vue'
+</script>
