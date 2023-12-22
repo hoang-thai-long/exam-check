@@ -1,5 +1,5 @@
 <template>
-  <exam-data lesson-id="5e8ca6a9c01ad7190cdab57f" class-id="5e652e05fd6d8e01304cd67c"></exam-data>
+  <exam-data lesson-id="6359fdcb4f3d6e3178ce5645" class-id="604d8d586d1fa93ea4d60d96"></exam-data>
   <!-- <router-view/> -->
 </template>
 
