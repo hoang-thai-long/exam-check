@@ -218,7 +218,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import $ from '@types/jquery';
+import $ from 'jquery';
 
 const startAlpha = 65;
 
