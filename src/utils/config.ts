@@ -8,6 +8,8 @@ export default {
         GET_STUDENTS:"Exam/GetStudents?classid=",
         GET_LESSON:'Exam/GetLesson?lessonid=',
         GET_QUESTION:'Exam/GetQuestion?partid=',
-        GET_ANSWER:'Exam/GetAnswer?questionid='
+        GET_ANSWER:'Exam/GetAnswer?questionid=',
+        CHECK_QUETIONS:'Exam/CheckQuestions?',
+        CHECK_LESSONS:'Exam/CheckLesson'
     }
 }

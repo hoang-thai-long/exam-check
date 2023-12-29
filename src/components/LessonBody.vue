@@ -3,8 +3,8 @@
         <div class="header-exam-cb">
             <div class="title-hdecb" v-if="lesson != null">
                 <h3 class="name-lesson">{{ lesson.title }}</h3>
-                <span class="time-lesson" v-if="lesson.timer > 0"> {{ lesson.timer }} phút</span>
-                <span class="student-done"></span>
+                <div class="time-lesson" v-if="lesson.timer > 0"> Thời gian : {{ lesson.timer }} phút</div>
+                <div class="student-done">Học sinh tham gia : {{ studento.length }}/{{ students.length }}</div>
             </div>
         </div>
         <hr />
@@ -12,92 +12,7 @@
             v-if="partsQuiz && partsQuiz.length > 0">
             <tr v-for="(part, indexP) in partsQuiz" :id="part.id" :key="part.id">
                 <template v-if="part.type == 'QUIZ1' || part.type == 'QUIZ4'">
-                    <template v-if="questions.filter(o => o.parentID == part.id).length == 1">
-                        <td>
-                            <table class="w-100">
-                                <tr v-for="(quiz) in questions.filter(o => o.parentID == part.id)" :key="quiz.id">
-                                    <td>
-                                        <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
-                                            <div class="col-sm-12 p-0"><b>Câu {{ (indexP + 1) }}: </b><span
-                                                    v-html="renderMathML(quiz.content)"></span></div>
-                                            <div class="col-sm-12 p-0">{{ renderMathML(part.description) }}
-                                                <template v-if="quiz.media != null && quiz.media.path != null">
-                                                    <img :src="quiz.media.path" />
-                                                </template>
-                                            </div>
-                                            <div class="form-group pl-3 m-0"
-                                                :bind="renderQuiz14(quiz.id, part.id + '_' + quiz.id, part.type)"
-                                                :id="part.id + '_' + quiz.id"></div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </template>
-                    <template v-else>
-                        <td>
-                            <table class="w-100">
-                                <tr>
-                                    <td>
-                                        <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
-                                            <div class="col-sm-12 p-0"><b>Câu {{ indexP + 1 }}: </b><span
-                                                    v-html="renderMathML(part.title)"></span></div>
-                                            <div class="col-sm-12 p-0" v-html="renderMathML(part.description)"></div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr v-for="(quiz) in questions.filter(o => o.parentID == part.id)" :key="quiz.id">
-                                    <td>
-                                        <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
-                                            <div class="col-sm-12 p-0" v-if="quiz.content != null"><span
-                                                    v-html="renderMathML(quiz.content)"></span></div>
-                                            <div class="form-group pl-3 m-0">
-                                                <!-- <template v-for="(ans, idxA) in quiz.CloneAnswers">
-
-                                                    <div class="form-check col-sm-12 d-inline-flex" :id="'ans-' + ans.ID"
-                                                        v-bind:class="ans.IsCorrect ? 'text-success' : ''">
-                                                        <template v-if="checkResultAns(ans, data.exam.Details)">
-                                                            <input class="form-check-input" :id="ans.ID"
-                                                                v-bind:type="[part.Type == 'QUIZ1' ? 'radio' : 'checkbox']"
-                                                                checked>
-                                                            <label class="form-check-label">
-                                                                <span style="font-weight:bold"
-                                                                    v-html="renderContentAns(ans.Content, idxA)"></span>
-                                                                <template
-                                                                    v-if="ans.Media != null && ans.Media.Path != null">
-                                                                    <img :src="ans.Media.Path" />
-                                                                </template>
-                                                            </label>
-                                                        </template>
-                                                        <template v-else>
-                                                            <input class="form-check-input" :id="ans.ID"
-                                                                v-bind:type="[part.Type == 'QUIZ1' ? 'radio' : 'checkbox']">
-                                                            <label class="form-check-label">
-                                                                <span v-html="renderContentAns(ans.Content, idxA)"></span>
-                                                                <template
-                                                                    v-if="ans.Media != null && ans.Media.Path != null">
-                                                                    <img :src="ans.Media.Path" />
-                                                                </template>
-                                                            </label>
-                                                        </template>
-                                                        <template
-                                                            v-if="!ans.IsCorrect && checkResultAns(ans, data.exam.Details)">
-                                                            <i class="fas fa-times text-danger ml-2"></i>
-                                                        </template>
-                                                        <template
-                                                            v-else-if="ans.IsCorrect && checkResultAns(ans, data.exam.Details)">
-                                                            <i class="fas fa-check text-success ml-2"></i>
-                                                        </template>
-                                                    </div>
-                                                </template> -->
-
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </template>
+                    <quiz-one :part="part" :questions="questions.filter(o => o.parentID == part.id).sort((a,b)=>a.order-b.order)" :index="indexP" :answers="answers"></quiz-one>
                 </template>
                 <template v-else-if="part.type == 'QUIZ2'">
                     <td>
@@ -105,9 +20,8 @@
                             <tr>
                                 <td>
                                     <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
-                                        <div class="col-sm-12 p-0"><b>Câu {{ (indexP + 1) }}: </b><span
-                                                v-html="renderMathML(part.title)"></span></div>
-                                        <!-- <div class="col-sm-12 p-0" v-html="stripStyle(part, data.exam.Details)"></div> -->
+                                        <div class="col-sm-12 p-0"><b>Câu {{ (indexP + 1) }}: </b><span v-html="renderMathML(part.title)"></span></div>
+                                        <div class="col-sm-12 p-0" :id="part.type + '_' + part.id" v-html="stripStyle(part, questions.filter(o => o.parentID == part.id))"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -175,15 +89,30 @@
     </div>
 </template>
 <script lang="ts" setup>
+import JQuery from 'jquery'
+import QuizOne from './QuizOne.vue';
 import $ from 'jquery';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import store from '@/store';
 import { Answer, Lesson, Part, Question } from '@/utils/model';
 import config from '@/utils/config';
 
-const lesson = computed<Lesson | null>(() => store.state.Lesson)
+
 const questions = computed(() => store.state.Questions);
+const answers = computed(() => store.state.Answers);
 const partsQuiz = computed(() => store.state.PartQuiz);
+const lesson = computed<Lesson | null>(() => store.state.Lesson);
+const studento = computed<string[]>(()=>store.state.StudentDo);
+const students = computed(()=>store.state.Students);
+const exams = computed(()=>store.state.Exams);
+const details =computed(()=>store.state.Details);
+
+watch(questions,(n,o)=>{
+    if(n != o && n.length > 0){
+        store.dispatch("CheckQuestions",n.map(o=> "quetionids="+o.id).join("&"));
+    }
+})
+
 const startAlpha = 65;
 
 const getTypeFile = (type: string) => {
@@ -232,62 +161,32 @@ const checkResultAns = (ans: { ParentID: string, ID: string }, obj: { QuestionID
         else return false
     }
 }
-
-const stripStyle = (data: { Description: any; Questions: string | any[] | null; }, obj: any[]) => {
-    var str = data.Description
+const stripStyle = (part: Part, questions: Question[]) => {
+    const str = part.description ?? '';
     //return str;
-    var html = $.parseHTML(str);
-    var totalQuiz = data.Questions == null ? 0 : data.Questions.length;
-    var fillquizs = $(html).find("fillquiz");
-    for (var i = 0; data.Questions != null && i < data.Questions.length; i++) {
-        var item = data.Questions[i];
-        var userAns = obj.find((x: { QuestionID: any; }) => x.QuestionID == item.ID)
+    const html = $.parseHTML(str);
+    const totalQuiz = questions == null ? 0 : questions.length;
+    const fillquizs = $(html).find("fillquiz");
+    if (fillquizs && fillquizs.length > 0) {
+        for (var i = 0; questions != null && i < totalQuiz; i++) {
+            var item = questions[i];
+            const holder = fillquizs[i];
+            holder.id = item.id
+            // const input = $("<span>", { class: "fillquiz" });
+            const input = $(holder).find(".fillquiz");
+            input.remove();
+            const label = $("<label>", { class: 'fillquiz', style: 'border-bottom: 1px solid #000;font-weight: 600;padding: 0 10px;' });
 
-        try {
-            //var container = $("#" + data.ParentID + " .quiz-wrapper .part-description");
-            var holder = fillquizs[i];
-            holder.id = item.ID
-            var input = $("<span>", { class: "fillquiz" });
-            $(holder).find(".fillquiz").remove();
-            if (userAns == undefined) {
-                $(input).text("Không có câu trả lời");
+            $(holder).append(label);
+            const res = answers.value.filter(o=>o.parentID == item.id);
+            if (res != null && res.length > 0) {
+                const value = res.map(o => o.content).join(' | ');
+                label.html(value);
             }
-            else {
-                $(input).text(userAns.AnswerValue);
-            }
-            $(holder).append(input);
-
-
-            var arrayRealAnswer = item.CloneAnswers.filter((x: { IsCorrect: any; }) => x.IsCorrect).map(function (v: { Content: any; }) {
-                return v.Content;
-            });
-
-            var idxCorrect = item.CloneAnswers.findIndex((x: { ID: any; }) => x.ID == userAns.RealAnswerID);//check xem trong arrayRealAnswer có chứa đáp án của học sinh k, > -1 => hs làm đúng
-            var isCorrect = false
-            if (idxCorrect > -1) isCorrect = true
-
-            var realAnswer = ""
-            if (arrayRealAnswer != undefined)
-                realAnswer = arrayRealAnswer.join(' | ')
-            if (realAnswer != "" && !isCorrect) {
-                var span = $("<span>", { text: realAnswer.trim(), class: "text-success ml-1 d-inline-block" })
-                $(holder).after(span[0])
-            }
-
-            if (!isCorrect) {
-                holder.setAttribute("style", "color:#dc3545")
-            }
-            else {
-                holder.setAttribute("style", "color:#28a745")
-            }
-        }
-        catch (e) {
-            console.log("No placeholder found");
         }
     }
-
-    var ret = $("<div>").append(html).html()
-    return ret;
+    const ret = $("<div>").append(html).html();
+    return ret; 
 }
 const isMobileDevice = () => {
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -312,7 +211,7 @@ const replaceGooglePath = function (str: string) {
     return str.replace("https://drive.google.com/uc?export=view&id=", "https://drive.google.com/file/d/") + "/preview";
 }
 
-const renderMediaContent = (data: Question, wrapper: $<HTMLElement>, type = "") => {
+const renderMediaContent = (data: Question | Answer, wrapper: JQuery, type = "") => {
     if (data.media) {
         var mediaHolder = $("<div>", { "class": "media-holder mt-2 mb-2 " + type });
         //var contentWrapper = $("<div>", { class: "m-content" });
@@ -412,7 +311,6 @@ const renderQuiz3 = (questions: Question[], id: string) => {
 
     var quizWrapper = $("<div>", { class: "quiz-wrapper col-8" })
     // var ansWrapper = $("<div>", { class: "answer-wrapper no-child col-4" });
-    console.log(questions, questions.length)
     if (questions && questions.length > 0) {
         for (var i = 0; i < questions.length; i++) {
             var question = questions[i]
@@ -450,63 +348,51 @@ const renderQuiz3 = (questions: Question[], id: string) => {
     boxQuiz3.append(row)
     el.appendChild(boxQuiz3[0]);
 }
-const QuizLoad: string[] = [];
-const renderQuiz14 = (id: string, elid: string, partType: string) => {
-    console.log(QuizLoad, QuizLoad.indexOf(id));
-    if (QuizLoad.indexOf(id) > -1) return;
-    const el = document.getElementById(elid);
-    if (el) {
-        QuizLoad.push(id);
-        store.dispatch("loadAnswers", id).then((res: Answer[]) => {
-            renderAnswerQuiz14(res, el, partType);
-        });
-    }
+const renderQuiz14 = (id: string, partType: string) => {
+    return renderAnswerQuiz14(answers.value.filter((o: Answer) => o.parentID == id), partType);
 }
-const renderAnswerQuiz14 = (answers: Answer[], el: HTMLElement, type: string) => {
-    // <div class="" :id="" v-bind:class="ans.IsCorrect ? '' : ''"> 
-    // <input class="form-check-input" :id="ans.ID"
-    //         v-bind:type="[part.Type == 'QUIZ1' ? 'radio' : 'checkbox']"
-    //         checked>
+const renderAnswerQuiz14 = (answers: Answer[], type: string) => {
+    // console.log(answers);
     let html = "";
     for (let i = 0; i < answers.length; i++) {
         const ans = answers[i];
         if (ans.isCorrect) {
             html += '<div class="form-check col-sm-12 d-inline-flex text-success" :id="ans-' + ans.id + '">';
             if (type == "QUIZ1") {
-                html += '<input class="form-check-input" id="' + ans.id + '" type="radio" checked>';
+                html += '<input class="form-check-input" id="' + ans.id + '" type="radio" checked disabled>';
             }
             else {
-                html += '<input class="form-check-input" id="' + ans.id + '" type="checkbox" checked>';
+                html += '<input class="form-check-input" id="' + ans.id + '" type="checkbox" checked disabled>';
             }
         }
         else {
             html += '<div class="form-check col-sm-12 d-inline-flex" :id="ans-' + ans.id + '">';
             if (type == "QUIZ1") {
-                html += '<input class="form-check-input" id="' + ans.id + '" type="radio">';
+                html += '<input class="form-check-input" id="' + ans.id + '" type="radio" disabled>';
             }
             else {
-                html += '<input class="form-check-input" id="' + ans.id + '" type="checkbox">';
+                html += '<input class="form-check-input" id="' + ans.id + '" type="checkbox" disabled>';
             }
         }
         html += '<label class="form-check-label">';
-        html += ' <span style="font-weight:bold">'+renderContentAns(ans.content, i)+'</span>';
-        if(ans.media != null && ans.media.path != null){
-            html += '<img src="'+ans.media.path+'" />';
+        html += ' <span style="font-weight:bold">' + renderContentAns(ans.content, i) + '</span>';
+        if (ans.media != null && ans.media.path != null) {
+            html += '<img src="' + ans.media.path + '" />';
         }
         html += "</label>";
 
         html += "</div>";
     }
-    el.innerHTML = html;
+    return html;
 }
-const renderAnswerQuiz3 = async (answer_part: $<HTMLElement>, id: string) => {
-    const answers = await store.dispatch("loadAnswers", id);
-    for (var j = 0; answers && j < answers.length; j++) {
-        var item = answers[j];
+const renderAnswerQuiz3 = (answer_part: JQuery, id: string) => {
+    const _answers = answers.value.filter(o => o.parentID == id);
+    for (var j = 0; _answers && j < _answers.length; j++) {
+        var item = _answers[j];
         // arrayAns.push(item)
         // var realQuizID = item.parentID
 
-        var txtContent = item.content == null || item.Content == "" ? "" : item.content.replace(/mml:/g, "");
+        var txtContent = item.content == null || item.content == "" ? "" : item.content.replace(/mml:/g, "");
         item.content = txtContent
         var answer = $("<fieldset>", { "class": "answer-item", id: item.id });
         if (item.content)
@@ -519,5 +405,39 @@ const renderAnswerQuiz3 = async (answer_part: $<HTMLElement>, id: string) => {
         }
         answer_part.append(answer);
     }
+}
+const questionDo = (id:string, type:string)=>{
+   const _answers = details.value.filter(o=>o.questionID == id);
+   const realAnswers = answers.value.filter(o=>o.parentID== id && o.isCorrect == true);
+   let tyleDung = 0, tyleSai = 0;
+   if(_answers && _answers.length > 0){
+        if(type == "QUIZ4"){
+
+            // chọn nhiều
+            console.log(type);
+        }
+        if(type == "QUIZ1"){
+            const real = realAnswers[0];
+            const wrong = _answers.filter(o=>o.answerID != real.id);
+            const right = _answers.filter(o=>o.answerID == real.id);
+            tyleSai = (wrong.length/_answers.length)*100;
+            tyleDung = (right.length/_answers.length)*100;
+            // chọn 1
+            // console.log(realAnswers,_answers);
+            
+        }
+        if(type == "QUIZ3"){
+            // nối
+            console.log(type);
+        }
+        if(type == "QUIZ2"){
+            // điền từ
+            console.log(realAnswers,_answers);
+        }
+        // const right = _answers.filter(o=>o.point > 0);
+        // const wrong = _answers.filter(o=>o.point == 0);
+   }
+
+   return $("<span>").html("Tỷ lệ đúng : "+tyleDung.toFixed(1) +"%").html();
 }
 </script>

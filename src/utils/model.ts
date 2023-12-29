@@ -41,7 +41,27 @@ interface Answer {
     order: number,
     parentID: string
 }
+interface ExamDetail {
+    answerID: string,
+    answerValue: string,
+    examID: string,
+    id: string,
+    point: number,
+    questionID: string,
+    questionValue: string,
+    studentID: string,
+}
+interface Exam {
+    created: Date,
+    id: string,
+    maxPoint: number,
+    number: number,
+    point: number,
+    status: boolean,
+    studentID: string,
+    updated: Date,
+}
 
 export {
-    Student, Lesson, Media, Part, Question, Answer
+    Student, Lesson, Media, Part, Question, Answer, ExamDetail, Exam
 }
