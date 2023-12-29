@@ -41,13 +41,14 @@
                                 disabled>
                         </template>
                         <label class="form-check-label">
-                            <span style="font-weight:bold">{{ renderContentAns(ans.content, i) }}</span>
+                            <span style="font-weight:bold" v-html="renderContentAns(ans.content, i)"></span>
                             <img v-if="ans.media && ans.media.path" :src="ans.media.path" />
                         </label>
 
                     </div>
                 </div>
             </div>
+            <div v-if="quiz.description" class="quiz-extend mt-2 rounded show" style="color: #6495ed;border: 0.5px solid" v-html="quiz.description"></div>
         </div>
     </div>
 </template>

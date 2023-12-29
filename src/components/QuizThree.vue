@@ -37,6 +37,9 @@
                                             </fieldset>
                                         </template>
                                     </div>
+                                    <div class="col-12">
+                                        <div v-html="quiz.description"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -47,7 +50,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import $ from 'jquery'
 import { renderMathML, breakLine, renderMediaContent } from '@/utils/utils'
 import { Answer, Part, Question } from '@/utils/model';
 

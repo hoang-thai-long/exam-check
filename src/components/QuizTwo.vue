@@ -23,6 +23,7 @@ const stripStyle = (part: Part, questions: Question[], answers: Answer[]) => {
     const html = $.parseHTML(str);
     const totalQuiz = questions == null ? 0 : questions.length;
     const fillquizs = $(html).find("fillquiz");
+    const giaitthic = $("<div>",{class:"QUIZ2-extend quiz-extend show"});
     if (fillquizs && fillquizs.length > 0) {
         for (var i = 0; questions != null && i < totalQuiz; i++) {
             var item = questions[i];
@@ -39,9 +40,13 @@ const stripStyle = (part: Part, questions: Question[], answers: Answer[]) => {
                 const value = res.map(o => o.content).join(' | ');
                 label.html(value);
             }
+            if(item.description){
+                const p = $("<div>").append('<b>'+(i+1) + '</b> ' +item.description);
+                giaitthic.append(p);
+            }
         }
     }
-    const ret = $("<div>").append(html).html();
+    const ret = $("<div>").append(html).append(giaitthic).html();
     return ret;
 }
 
