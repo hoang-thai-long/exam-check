@@ -8,25 +8,14 @@
             </div>
         </div>
         <hr />
-        <table class="w-100" style="width: 700px;margin: auto;border-collapse: collapse"
+        <div class="w-100" style="width: 700px;margin: auto;border-collapse: collapse"
             v-if="partsQuiz && partsQuiz.length > 0">
-            <tr v-for="(part, indexP) in partsQuiz" :id="part.id" :key="part.id">
+            <div v-for="(part, indexP) in partsQuiz" :id="part.id" :key="part.id">
                 <template v-if="part.type == 'QUIZ1' || part.type == 'QUIZ4'">
                     <quiz-one :part="part" :questions="questions.filter(o => o.parentID == part.id).sort((a,b)=>a.order-b.order)" :index="indexP" :answers="answers"></quiz-one>
                 </template>
                 <template v-else-if="part.type == 'QUIZ2'">
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
-                                        <div class="col-sm-12 p-0"><b>Câu {{ (indexP + 1) }}: </b><span v-html="renderMathML(part.title)"></span></div>
-                                        <div class="col-sm-12 p-0" :id="part.type + '_' + part.id" v-html="stripStyle(part, questions.filter(o => o.parentID == part.id))"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+                    <quiz-two :anwsers="answers" :index="indexP" :part="part" :questions="questions.filter(o=>o.parentID == part.id)"></quiz-two>
                 </template>
                 <template v-else-if="part.type == 'ESSAY'">
                     <td>
@@ -61,36 +50,18 @@
                     </td>
                 </template>
                 <template v-if="part.type == 'QUIZ3'">
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
-                                        <div class="col-sm-12 p-0"><b>Câu {{ (indexP + 1) }} : </b><span
-                                                v-html="renderMathML(part.title)"></span></div>
-                                        <div class="col-sm-12 p-0" v-html="renderMathML(part.description)"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div :class="'row m-0 pt-3 pb-3 ' + part.type" style="border-bottom: 0.5px dotted gray"
-                                        :id="part.id + '_' + part.type"
-                                        :v-model="renderQuiz3(questions.filter(o => o.parentID == part.id), part.id + '_' + part.type)">
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
+                    <quiz-three :part="part" :index="indexP" :quetions="questions.filter(o=>o.parentID == part.id)" :answers="answers"></quiz-three>
                 </template>
-            </tr>
-        </table>
+            </div>
+        </div>
         <div id="breadPage" class="m-0 text-center w-100" style="font-size:16px;font-weight:bold">---Hết---</div>
     </div>
 </template>
 <script lang="ts" setup>
 import JQuery from 'jquery'
+import QuizThree from './QuizThree.vue';
 import QuizOne from './QuizOne.vue';
+import QuizTwo from './QuizTwo.vue';
 import $ from 'jquery';
 import { computed, watch } from 'vue';
 import store from '@/store';
