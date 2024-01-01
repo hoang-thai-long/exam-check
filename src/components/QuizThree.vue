@@ -1,5 +1,6 @@
 <template>
     <div v-if="part && quetions.length > 0 && answers.length > 0">
+        <!-- <percent-questions :part="part" :question="quetions.filter(o=>o.parentID == part.id)"></percent-questions> -->
         <div class="row m-0 pt-3 pb-3" style="border-bottom: 0.5px dotted gray">
             <div class="col-sm-12 p-0"><b>Câu {{ (index + 1) }} : </b><span v-html="renderMathML(part.title)"></span></div>
             <div class="col-sm-12 p-0" v-html="renderMathML(part.description)"></div>
@@ -10,6 +11,10 @@
                     <div class="quiz-wrapper">
                         <div class="quiz-item" v-for="(quiz, iq) in quetions" :id="quiz.id" :data-part-id="part.id"
                             :key="quiz.id + iq">
+                            <percent-answer v-if="answers.find(o => o.parentID == quiz.id)" class="box-ans__info" 
+                                :part="part" :question="quiz" 
+                                :answer="answers.find(o => o.parentID == quiz.id)">
+                            </percent-answer>
                             <div class="quiz-pane">
                                 <div class="pane-item row">
                                     <div class="col-6">
@@ -52,7 +57,8 @@
 <script lang="ts" setup>
 import { renderMathML, breakLine, renderMediaContent } from '@/utils/utils'
 import { Answer, Part, Question } from '@/utils/model';
-
+import PercentAnswer from './PercentAnswer.vue'
+import PercentQuestions from './PercentQuestions.vue';
 defineProps<{
     part: Part,
     quetions: Question[],

@@ -4,7 +4,7 @@
             <div class="title-hdecb" v-if="lesson != null">
                 <h3 class="name-lesson">{{ lesson.title }}</h3>
                 <div class="time-lesson" v-if="lesson.timer > 0"> Thời gian : {{ lesson.timer }} phút</div>
-                <div class="student-done">Học sinh tham gia : {{ studento.length }}/{{ students.length }}</div>
+                <div class="student-done">(Học sinh tham gia : {{ studento.length }}/{{ students.length }})</div>
             </div>
         </div>
         <hr />

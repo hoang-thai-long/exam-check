@@ -33,6 +33,20 @@ interface Question {
     order: number
 }
 
+class CQuestion implements Question {
+    id!: string
+    content!: string
+    parentID!: string
+    description!: string | null
+    media!: Media | null
+    order!: number
+}
+
+const isQuestion = (data:Question | Question[] | undefined): data is Question =>{
+    if(!data) return false;
+    if(data instanceof Array) return false;
+    return true;
+}
 interface Answer {
     content: string,
     id: string,
@@ -63,5 +77,5 @@ interface Exam {
 }
 
 export {
-    Student, Lesson, Media, Part, Question, Answer, ExamDetail, Exam
+    Student, Lesson, Media, Part, Question, Answer, ExamDetail, Exam, CQuestion, isQuestion
 }
